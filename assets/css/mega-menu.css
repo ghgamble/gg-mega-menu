@@ -1,0 +1,110 @@
+/* Mega Menu wrapper */
+header.site-header .mega-menu {
+    display: none !important;
+    position: absolute;
+    top: calc(100% + 32px);
+    left: 0;
+    right: 0;
+    width: 100% !important;
+    margin: 0 auto;
+    background: #fff !important;
+    padding: 2rem;
+    z-index: 999;
+    border-radius: 0 !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    border-top: none !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, .15) !important;
+    margin-block-start: 0 !important;
+}
+
+/* Inner grid */
+header.site-header .mega-menu-inner {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+/* Top-level li positioning */
+header.site-header .header-nav > .menu > li {
+    position: static !important;
+}
+
+header.site-header .header-nav > .menu > li.menu-item-depth-0 {
+    position: relative;
+}
+
+header.site-header .header-nav > .menu > li.menu-item-depth-0::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    height: 32px;
+}
+
+/* Show/open state */
+header.site-header .header-nav > .menu > li.menu-item-has-mega.open > .mega-menu {
+    display: grid !important;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+}
+
+li.menu-item.open .mega-menu {
+    box-shadow: 0 6px 10px -4px rgba(0, 0, 0, .15) !important;
+}
+
+/* Remove header shadow when mega is open (optional) */
+header.site-header.mega-menu-open {
+    box-shadow: none;
+}
+
+/* Mega item styling */
+.mega-menu-item {
+    display: block;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    padding: 0.5rem;
+    border-radius: 3px;
+}
+
+.mega-menu-item .mega-title {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #003366;
+}
+
+.mega-menu-item .mega-summary {
+    font-size: 0.85rem;
+    line-height: 1.4;
+    color: #444;
+}
+
+/* Make sure links don’t indent like normal submenus */
+.sub-menu.mega-menu li a {
+    padding-left: 0 !important;
+}
+
+/* Icon + text layout */
+img.mega-menu-icon.wp-post-image {
+    max-width: 3.5rem;
+    height: auto;
+    padding-top: 0.3rem;
+}
+
+.mega-menu .mega-icon-wrapper {
+    align-self: auto;
+    padding-right: 0.75rem;
+}
+
+.mega-text-wrapper a.mega-title {
+    margin-bottom: 0;
+    font-size: 1rem !important;
+}
+
+/* Submenu li row layout */
+header.site-header .header-nav .menu .sub-menu li {
+    display: flex;
+}
