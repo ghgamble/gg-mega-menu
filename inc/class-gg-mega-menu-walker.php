@@ -6,7 +6,8 @@ class GG_Mega_Menu_Walker extends Walker_Nav_Menu {
 
 	public function start_lvl( &$output, $depth = 0, $args = null ) {
 		if ( $depth === 0 ) {
-			// Our mega menu wrapper for the first submenu level
+			// Mega menu wrapper for the first submenu level
+			// NOTE: keeping your existing markup structure to avoid CSS/JS changes.
 			$output .= '<ul class="sub-menu mega-menu"><div class="mega-menu-inner">';
 		} else {
 			parent::start_lvl( $output, $depth, $args );
@@ -47,15 +48,32 @@ class GG_Mega_Menu_Walker extends Walker_Nav_Menu {
 		// ===== MEGA MENU ITEMS (FIRST SUBLEVEL) =====
 		if ( $depth === 1 ) {
 
-			// Summary from custom field on target page
-			$summary = '';
-			if ( $item->object === 'page' && $item->object_id ) {
+			/**
+			 * 1) Menu-item fields (works for Pages AND Custom Links)
+			 * Saved on the menu item itself (nav_menu_item post).
+			 */
+			$summary  = get_post_meta( $item->ID, '_ggmm_menu_item_summary', true );
+			$image_id = (int) get_post_meta( $item->ID, '_ggmm_menu_item_image_id', true );
+
+			$image_html = '';
+			if ( $image_id ) {
+				$image_html = wp_get_attachment_image(
+					$image_id,
+					'thumbnail',
+					false,
+					array( 'class' => 'mega-menu-icon' )
+				);
+			}
+
+			/**
+			 * 2) Fallbacks: if it's a Page item and menu-item fields are empty,
+			 * use the page-level summary + featured image.
+			 */
+			if ( empty( $summary ) && $item->object === 'page' && ! empty( $item->object_id ) ) {
 				$summary = get_post_meta( $item->object_id, '_gg_menu_summary', true );
 			}
 
-			// Featured image (icon) for the page
-			$image_html = '';
-			if ( $item->object === 'page' && has_post_thumbnail( $item->object_id ) ) {
+			if ( empty( $image_html ) && $item->object === 'page' && ! empty( $item->object_id ) && has_post_thumbnail( $item->object_id ) ) {
 				$image_html = get_the_post_thumbnail(
 					$item->object_id,
 					'thumbnail',
@@ -66,7 +84,7 @@ class GG_Mega_Menu_Walker extends Walker_Nav_Menu {
 			$output .= '<li class="mega-menu-item">';
 
 			// Icon
-			if ( $image_html ) {
+			if ( ! empty( $image_html ) ) {
 				$output .= '<div class="mega-icon-wrapper">' . $image_html . '</div>';
 			}
 
@@ -79,7 +97,7 @@ class GG_Mega_Menu_Walker extends Walker_Nav_Menu {
 			           '</a>';
 
 			// Summary text
-			if ( $summary ) {
+			if ( ! empty( $summary ) ) {
 				$output .= '<div class="mega-summary">' . esc_html( $summary ) . '</div>';
 			}
 
@@ -89,7 +107,7 @@ class GG_Mega_Menu_Walker extends Walker_Nav_Menu {
 			return;
 		}
 
-		// ===== FALLBACK FOR DEEPER LEVELS =====
+		// ===== FALLBACK FOR ANY DEEPER LEVELS =====
 		parent::start_el( $output, $item, $depth, $args, $id );
 	}
 

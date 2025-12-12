@@ -1,5 +1,5 @@
-/* Mega Menu wrapper */
-header.site-header .mega-menu {
+/* Mega Menu wrapper (only inside mega-enabled top items) */
+header.site-header .header-nav > .menu > li.menu-item-has-mega > .mega-menu {
     display: none !important;
     position: absolute;
     top: calc(100% + 32px);
@@ -19,7 +19,7 @@ header.site-header .mega-menu {
 }
 
 /* Inner grid */
-header.site-header .mega-menu-inner {
+header.site-header .header-nav > .menu > li.menu-item-has-mega > .mega-menu .mega-menu-inner {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 1rem;
@@ -27,16 +27,16 @@ header.site-header .mega-menu-inner {
     margin: 0 auto;
 }
 
-/* Top-level li positioning */
-header.site-header .header-nav > .menu > li {
+/* ONLY mega-menu parents need positioning changes (don’t touch all top-level li) */
+header.site-header .header-nav > .menu > li.menu-item-has-mega {
     position: static !important;
 }
 
-header.site-header .header-nav > .menu > li.menu-item-depth-0 {
+header.site-header .header-nav > .menu > li.menu-item-has-mega.menu-item-depth-0 {
     position: relative;
 }
 
-header.site-header .header-nav > .menu > li.menu-item-depth-0::after {
+header.site-header .header-nav > .menu > li.menu-item-has-mega.menu-item-depth-0::after {
     content: '';
     position: absolute;
     left: 0;
@@ -48,11 +48,11 @@ header.site-header .header-nav > .menu > li.menu-item-depth-0::after {
 /* Show/open state */
 header.site-header .header-nav > .menu > li.menu-item-has-mega.open > .mega-menu {
     display: grid !important;
-    padding-top: 1.5rem;
+    padding-top: 0rem;
     padding-bottom: 1.5rem;
 }
 
-li.menu-item.open .mega-menu {
+header.site-header .header-nav > .menu > li.menu-item-has-mega.open > .mega-menu {
     box-shadow: 0 6px 10px -4px rgba(0, 0, 0, .15) !important;
 }
 
@@ -62,49 +62,54 @@ header.site-header.mega-menu-open {
 }
 
 /* Mega item styling */
-.mega-menu-item {
-    display: block;
+header.site-header .header-nav > .menu > li.menu-item-has-mega > .mega-menu .mega-menu-item {
+    display: flex;
+    align-items: flex-start;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
     padding: 0.5rem;
     border-radius: 3px;
 }
 
-.mega-menu-item .mega-title {
+header.site-header .header-nav > .menu > li.menu-item-has-mega > .mega-menu .mega-title {
     font-weight: 600;
     display: block;
     margin-bottom: 0.5rem;
     color: #003366;
 }
 
-.mega-menu-item .mega-summary {
+header.site-header .header-nav > .menu > li.menu-item-has-mega > .mega-menu .mega-summary {
     font-size: 0.85rem;
     line-height: 1.4;
     color: #444;
 }
 
-/* Make sure links don’t indent like normal submenus */
-.sub-menu.mega-menu li a {
+/* Only mega menu links shouldn’t indent */
+header.site-header .header-nav > .menu > li.menu-item-has-mega > .mega-menu li a {
     padding-left: 0 !important;
 }
 
 /* Icon + text layout */
-img.mega-menu-icon.wp-post-image {
+header.site-header .header-nav > .menu > li.menu-item-has-mega > .mega-menu img.mega-menu-icon {
     max-width: 3.5rem;
-    height: auto;
+    width: 3.5rem;
+    height: 3.5rem;
+    object-fit: cover;
+    display: block;
     padding-top: 0.3rem;
 }
 
-.mega-menu .mega-icon-wrapper {
-    align-self: auto;
+header.site-header .header-nav > .menu > li.menu-item-has-mega > .mega-menu .mega-icon-wrapper {
+    flex: 0 0 auto;
+    align-self: flex-start;
     padding-right: 0.75rem;
 }
 
-.mega-text-wrapper a.mega-title {
+header.site-header .header-nav > .menu > li.menu-item-has-mega > .mega-menu .mega-text-wrapper a.mega-title {
     margin-bottom: 0;
     font-size: 1rem !important;
 }
 
-/* Submenu li row layout */
-header.site-header .header-nav .menu .sub-menu li {
+/* CRITICAL: only set flex on mega-menu rows, NOT all sub-menu li */
+header.site-header .header-nav > .menu > li.menu-item-has-mega > .mega-menu > li {
     display: flex;
 }
