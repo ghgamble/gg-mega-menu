@@ -22,6 +22,32 @@ class GG_Mega_Menu_Walker extends Walker_Nav_Menu {
 		}
 	}
 
+	/**
+	 * Build anchor attributes respecting WP menu settings.
+	 * - Open in new tab => target="_blank"
+	 * - Adds noopener noreferrer when target=_blank
+	 * - Preserves xfn rel if set
+	 */
+	private function ggmm_build_link_attrs( $item ) {
+		$target = ! empty( $item->target ) ? $item->target : '';
+		$rel    = ! empty( $item->xfn ) ? $item->xfn : '';
+
+		if ( $target === '_blank' ) {
+			$rel = trim( $rel . ' noopener noreferrer' );
+		}
+
+		$attrs = '';
+
+		if ( $target ) {
+			$attrs .= ' target="' . esc_attr( $target ) . '"';
+		}
+		if ( $rel ) {
+			$attrs .= ' rel="' . esc_attr( $rel ) . '"';
+		}
+
+		return $attrs;
+	}
+
 	public function start_el( &$output, $item, $depth = 0, $args = null, $id = 0 ) {
 
 		// ===== TOP LEVEL ITEM (PARENT) =====
@@ -37,8 +63,10 @@ class GG_Mega_Menu_Walker extends Walker_Nav_Menu {
 				array_map( 'sanitize_html_class', array_unique( $classes ) )
 			);
 
+			$link_attrs = $this->ggmm_build_link_attrs( $item );
+
 			$output .= '<li class="' . esc_attr( $class_names ) . '">';
-			$output .= '<a href="' . esc_url( $item->url ) . '">'
+			$output .= '<a href="' . esc_url( $item->url ) . '"' . $link_attrs . '>'
 			           . esc_html( $item->title ) .
 			           '</a>';
 
@@ -73,13 +101,20 @@ class GG_Mega_Menu_Walker extends Walker_Nav_Menu {
 				$summary = get_post_meta( $item->object_id, '_gg_menu_summary', true );
 			}
 
-			if ( empty( $image_html ) && $item->object === 'page' && ! empty( $item->object_id ) && has_post_thumbnail( $item->object_id ) ) {
+			if (
+				empty( $image_html ) &&
+				$item->object === 'page' &&
+				! empty( $item->object_id ) &&
+				has_post_thumbnail( $item->object_id )
+			) {
 				$image_html = get_the_post_thumbnail(
 					$item->object_id,
 					'thumbnail',
 					array( 'class' => 'mega-menu-icon' )
 				);
 			}
+
+			$link_attrs = $this->ggmm_build_link_attrs( $item );
 
 			$output .= '<li class="mega-menu-item">';
 
@@ -91,8 +126,8 @@ class GG_Mega_Menu_Walker extends Walker_Nav_Menu {
 			// Text wrapper
 			$output .= '<div class="mega-text-wrapper">';
 
-			// Title link
-			$output .= '<a href="' . esc_url( $item->url ) . '" class="mega-title">'
+			// Title link (includes target/rel when set on the menu item)
+			$output .= '<a href="' . esc_url( $item->url ) . '"' . $link_attrs . ' class="mega-title">'
 			           . esc_html( $item->title ) .
 			           '</a>';
 

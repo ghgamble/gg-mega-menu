@@ -1,15 +1,15 @@
 document.addEventListener("DOMContentLoaded", function () {
 	/**
-	 * GG Mega Menu (theme-agnostic-ish)
-	 * - Avoids hardcoding #menu-main-menu
-	 * - Scopes to header nav structure
-	 * - Keeps your existing hover + delay + ESC + click-outside behavior
+	 * GG Mega Menu (plugin)
+	 * - Works with theme nav markup: header.site-header .header-nav > ul.menu
+	 * - Keeps the same hover + delay + ESC + click-outside behavior as your client theme
+	 * - Fixes "page content showing under dropdown" by toggling body class
 	 */
 
 	const header = document.querySelector("header.site-header");
 	const nav = header ? header.querySelector(".header-nav") : null;
 
-	// Only target mega-enabled top-level items inside the header nav
+	// Target mega-enabled top-level items inside the header nav
 	const topItems = nav
 		? nav.querySelectorAll(
 				":scope > ul.menu > li.menu-item-depth-0.menu-item-has-mega"
@@ -18,13 +18,23 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	if (!topItems.length) return;
 
-	function closeAllMegaMenus() {
-		topItems.forEach((i) => i.classList.remove("open"));
-		if (header) header.classList.remove("mega-menu-open");
+	function setOpenState(isOpen) {
+		document.body.classList.toggle("ggmm-mega-open", !!isOpen);
+		if (header) header.classList.toggle("mega-menu-open", !!isOpen);
 	}
 
 	function anyMegaOpen() {
-		return !!(nav && nav.querySelector(":scope > ul.menu > li.menu-item-depth-0.menu-item-has-mega.open"));
+		return !!(
+			nav &&
+			nav.querySelector(
+				":scope > ul.menu > li.menu-item-depth-0.menu-item-has-mega.open"
+			)
+		);
+	}
+
+	function closeAllMegaMenus() {
+		topItems.forEach((i) => i.classList.remove("open"));
+		setOpenState(false);
 	}
 
 	topItems.forEach((item) => {
@@ -36,16 +46,14 @@ document.addEventListener("DOMContentLoaded", function () {
 		let closeTimer = null;
 
 		function openMenu() {
-			// Close other mega menus
+			// close any other open mega menus
 			topItems.forEach((i) => {
 				if (i !== item) i.classList.remove("open");
 			});
 
-			// Open this one
+			// open this one
 			item.classList.add("open");
-
-			// Header state
-			if (header) header.classList.add("mega-menu-open");
+			setOpenState(true);
 		}
 
 		function startCloseTimer() {
@@ -54,9 +62,9 @@ document.addEventListener("DOMContentLoaded", function () {
 			closeTimer = setTimeout(function () {
 				item.classList.remove("open");
 
-				// If none are open anymore, clear header state
-				if (!anyMegaOpen() && header) {
-					header.classList.remove("mega-menu-open");
+				// if none open anymore, clear body/header state
+				if (!anyMegaOpen()) {
+					setOpenState(false);
 				}
 			}, 200);
 		}
@@ -68,7 +76,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			}
 		}
 
-		// Hover open/close (top-level link)
+		// Hover open/close (same as your working client theme)
 		link.addEventListener("mouseenter", function () {
 			cancelCloseTimer();
 			openMenu();
@@ -78,7 +86,6 @@ document.addEventListener("DOMContentLoaded", function () {
 			startCloseTimer();
 		});
 
-		// Hover open/close (panel)
 		submenu.addEventListener("mouseenter", function () {
 			cancelCloseTimer();
 			openMenu();
@@ -88,7 +95,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			startCloseTimer();
 		});
 
-		// Optional: focus accessibility (keeps it open when tabbing into it)
+		// keyboard friendliness (does not interfere with opening in new tab)
 		link.addEventListener("focus", function () {
 			cancelCloseTimer();
 			openMenu();
@@ -102,14 +109,14 @@ document.addEventListener("DOMContentLoaded", function () {
 		});
 	});
 
-	// Close with Escape key
+	// Close all with Escape
 	document.addEventListener("keyup", function (e) {
 		if (e.key === "Escape") {
 			closeAllMegaMenus();
 		}
 	});
 
-	// Close when clicking outside the mega menu parents
+	// Close when clicking outside the mega parents
 	document.addEventListener("click", function (e) {
 		const inside = e.target.closest(
 			"header.site-header .header-nav > ul.menu > li.menu-item-depth-0.menu-item-has-mega"

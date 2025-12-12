@@ -1,115 +1,195 @@
+/* =========================================================
+   GG Mega Menu (plugin) — full CSS
+   - Keeps your exact working mega menu layout styles
+   - Fixes content showing under dropdown by flattening page stacking
+   - No backdrops, no pseudo-elements that break widths
+========================================================= */
+
+/* ===== Fix: Hide/flatten page behind dropdown (plugin-safe) ===== */
+
+/* Prevent scroll while mega is open */
+body.ggmm-mega-open {
+	overflow: hidden;
+}
+
+/*
+  Force common content wrappers behind the header.
+  This is the missing piece vs child theme: many themes give these
+  wrappers their own stacking context/z-index.
+*/
+body.ggmm-mega-open main,
+body.ggmm-mega-open .site-content,
+body.ggmm-mega-open #page,
+body.ggmm-mega-open .wp-site-blocks {
+	position: relative;
+	z-index: 0;
+}
+
+/* Keep header above everything */
+header.site-header {
+	position: relative;
+	z-index: 1000;
+}
+
+/* Keep dropdown above header/content */
+header.site-header .mega-menu {
+	z-index: 1001;
+}
+
+/* ===== Your working mega menu CSS (kept intact) ===== */
+
 /* Mega Menu wrapper (only inside mega-enabled top items) */
 header.site-header .header-nav > .menu > li.menu-item-has-mega > .mega-menu {
-    display: none !important;
-    position: absolute;
-    top: calc(100% + 32px);
-    left: 0;
-    right: 0;
-    width: 100% !important;
-    margin: 0 auto;
-    background: #fff !important;
-    padding: 2rem;
-    z-index: 999;
-    border-radius: 0 !important;
-    padding-left: 1rem !important;
-    padding-right: 1rem !important;
-    border-top: none !important;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, .15) !important;
-    margin-block-start: 0 !important;
+	display: none !important;
+	position: absolute;
+	top: calc(100% + 32px);
+	left: 0;
+	right: 0;
+	width: 100% !important;
+	margin: 0 auto;
+	background: #fff !important;
+	padding: 2rem;
+	z-index: 999;
+	border-radius: 0 !important;
+	padding-left: 1rem !important;
+	padding-right: 1rem !important;
+	border-top: none !important;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15) !important;
+	margin-block-start: 0 !important;
 }
 
 /* Inner grid */
-header.site-header .header-nav > .menu > li.menu-item-has-mega > .mega-menu .mega-menu-inner {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1rem;
-    max-width: 1100px;
-    margin: 0 auto;
+header.site-header
+	.header-nav
+	> .menu
+	> li.menu-item-has-mega
+	> .mega-menu
+	.mega-menu-inner {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 1rem;
+	max-width: 1100px;
+	margin: 0 auto;
 }
 
 /* ONLY mega-menu parents need positioning changes (don’t touch all top-level li) */
 header.site-header .header-nav > .menu > li.menu-item-has-mega {
-    position: static !important;
+	position: static !important;
 }
 
 header.site-header .header-nav > .menu > li.menu-item-has-mega.menu-item-depth-0 {
-    position: relative;
+	position: relative;
 }
 
-header.site-header .header-nav > .menu > li.menu-item-has-mega.menu-item-depth-0::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 100%;
-    height: 32px;
+header.site-header
+	.header-nav
+	> .menu
+	> li.menu-item-has-mega.menu-item-depth-0::after {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 100%;
+	height: 32px;
 }
 
 /* Show/open state */
 header.site-header .header-nav > .menu > li.menu-item-has-mega.open > .mega-menu {
-    display: grid !important;
-    padding-top: 0rem;
-    padding-bottom: 1.5rem;
+	display: grid !important;
+	padding-top: 0;
+	padding-bottom: 1.5rem;
+    margin-top: -1rem !important;
 }
 
 header.site-header .header-nav > .menu > li.menu-item-has-mega.open > .mega-menu {
-    box-shadow: 0 6px 10px -4px rgba(0, 0, 0, .15) !important;
+	box-shadow: 0 6px 10px -4px rgba(0, 0, 0, 0.15) !important;
 }
 
 /* Remove header shadow when mega is open (optional) */
 header.site-header.mega-menu-open {
-    box-shadow: none;
+	box-shadow: none;
 }
 
 /* Mega item styling */
-header.site-header .header-nav > .menu > li.menu-item-has-mega > .mega-menu .mega-menu-item {
-    display: flex;
-    align-items: flex-start;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-    padding: 0.5rem;
-    border-radius: 3px;
+header.site-header
+	.header-nav
+	> .menu
+	> li.menu-item-has-mega
+	> .mega-menu
+	.mega-menu-item {
+	display: flex;
+	align-items: flex-start;
+	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+	padding: 0.5rem;
+	border-radius: 3px;
 }
 
-header.site-header .header-nav > .menu > li.menu-item-has-mega > .mega-menu .mega-title {
-    font-weight: 600;
-    display: block;
-    margin-bottom: 0.5rem;
-    color: #003366;
+header.site-header
+	.header-nav
+	> .menu
+	> li.menu-item-has-mega
+	> .mega-menu
+	.mega-title {
+	font-weight: 600;
+	display: block;
+	margin-bottom: 0.5rem;
+	color: #003366;
 }
 
-header.site-header .header-nav > .menu > li.menu-item-has-mega > .mega-menu .mega-summary {
-    font-size: 0.85rem;
-    line-height: 1.4;
-    color: #444;
+header.site-header
+	.header-nav
+	> .menu
+	> li.menu-item-has-mega
+	> .mega-menu
+	.mega-summary {
+	font-size: 0.85rem;
+	line-height: 1.4;
+	color: #444;
 }
 
 /* Only mega menu links shouldn’t indent */
 header.site-header .header-nav > .menu > li.menu-item-has-mega > .mega-menu li a {
-    padding-left: 0 !important;
+	padding-left: 0 !important;
 }
 
 /* Icon + text layout */
-header.site-header .header-nav > .menu > li.menu-item-has-mega > .mega-menu img.mega-menu-icon {
-    max-width: 3.5rem;
-    width: 3.5rem;
-    height: 3.5rem;
-    object-fit: cover;
-    display: block;
-    padding-top: 0.3rem;
+header.site-header
+	.header-nav
+	> .menu
+	> li.menu-item-has-mega
+	> .mega-menu
+	img.mega-menu-icon {
+	max-width: 3.5rem;
+	width: 3.5rem;
+	height: 3.5rem;
+	object-fit: cover;
+	display: block;
+	padding-top: 0.3rem;
 }
 
-header.site-header .header-nav > .menu > li.menu-item-has-mega > .mega-menu .mega-icon-wrapper {
-    flex: 0 0 auto;
-    align-self: flex-start;
-    padding-right: 0.75rem;
+header.site-header
+	.header-nav
+	> .menu
+	> li.menu-item-has-mega
+	> .mega-menu
+	.mega-icon-wrapper {
+	flex: 0 0 auto;
+	align-self: flex-start;
+	padding-right: 0.75rem;
 }
 
-header.site-header .header-nav > .menu > li.menu-item-has-mega > .mega-menu .mega-text-wrapper a.mega-title {
-    margin-bottom: 0;
-    font-size: 1rem !important;
+header.site-header
+	.header-nav
+	> .menu
+	> li.menu-item-has-mega
+	> .mega-menu
+	.mega-text-wrapper
+	a.mega-title {
+	margin-bottom: 0;
+	font-size: 1rem !important;
 }
 
 /* CRITICAL: only set flex on mega-menu rows, NOT all sub-menu li */
 header.site-header .header-nav > .menu > li.menu-item-has-mega > .mega-menu > li {
-    display: flex;
+	display: flex;
 }
